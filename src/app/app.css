@@ -67,3 +67,9 @@ label {
   font-weight: bold;
   margin: 0;
 }
+
+.occupation-details {
+  margin-top: 5px;
+  color: #666;
+  font-style: italic;
+}

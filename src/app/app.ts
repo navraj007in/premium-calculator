@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { OCCUPATIONS, Occupation, getOccupationByValue, getFactorForRating } from './models/occupation.model';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import { CommonModule } from '@angular/common';
 export class App {
   premiumForm: FormGroup;
   monthlyPremium: number = 0;
+  occupations = OCCUPATIONS;
+  selectedOccupationDetails: Occupation | undefined;
 
   constructor(private fb: FormBuilder) {
     this.premiumForm = this.fb.group({
@@ -21,5 +24,17 @@ export class App {
       occupation: ['', Validators.required],
       deathSumInsured: ['', [Validators.required, Validators.min(1)]]
     });
+
+    this.premiumForm.get('occupation')?.valueChanges.subscribe(value => {
+      this.selectedOccupationDetails = getOccupationByValue(value);
+    });
+  }
+
+  getOccupationRating(): string {
+    return this.selectedOccupationDetails ? this.selectedOccupationDetails.rating : '';
+  }
+
+  getOccupationFactor(): number {
+    return this.selectedOccupationDetails ? getFactorForRating(this.selectedOccupationDetails.rating) : 0;
   }
 }

@@ -51,16 +51,15 @@
         formControlName="occupation"
         class="form-control">
         <option value="">Select Occupation</option>
-        <option value="cleaner">Cleaner</option>
-        <option value="doctor">Doctor</option>
-        <option value="author">Author</option>
-        <option value="farmer">Farmer</option>
-        <option value="mechanic">Mechanic</option>
-        <option value="florist">Florist</option>
-        <option value="other">Other</option>
+        <option *ngFor="let occ of occupations" [value]="occ.value">
+          {{occ.name}}
+        </option>
       </select>
       <div *ngIf="premiumForm.get('occupation')?.invalid && premiumForm.get('occupation')?.touched" class="error">
         Occupation is required
+      </div>
+      <div *ngIf="selectedOccupationDetails" class="occupation-details">
+        <small>Rating: {{getOccupationRating()}} | Factor: {{getOccupationFactor()}}</small>
       </div>
     </div>
 
