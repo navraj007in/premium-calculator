@@ -68,7 +68,7 @@
         Occupation is required
       </div>
       <div *ngIf="selectedOccupationDetails" class="occupation-details">
-        <small>Rating: {{getOccupationRating()}} | Factor: {{getOccupationFactor()}}</small>
+        <small>Rating: <span class="highlight">{{getOccupationRating()}}</span> | Factor: <span class="highlight">{{getOccupationFactor()}}</span></small>
       </div>
     </div>
 
@@ -90,9 +90,38 @@
       </div>
     </div>
 
-    <div class="premium-display" *ngIf="monthlyPremium > 0">
+    <div class="premium-display" [class.updated]="premiumUpdated" *ngIf="calculationResult && monthlyPremium > 0">
       <h2>Monthly Premium</h2>
-      <p class="premium-amount">${{monthlyPremium | number:'1.2-2'}}</p>
+      <p class="premium-amount" [class.updated]="premiumUpdated">{{formatCurrency(monthlyPremium)}}</p>
+
+      <div class="premium-summary">
+        <p><strong>Annual Premium:</strong> {{formatCurrency(calculationResult.annualPremium)}}</p>
+        <p><strong>Occupation Rating:</strong> {{calculationResult.occupationRating}}</p>
+        <p><strong>Rating Factor:</strong> {{calculationResult.occupationFactor}}</p>
+      </div>
+
+      <button
+        type="button"
+        class="details-toggle"
+        (click)="toggleCalculationDetails()">
+        {{showCalculationDetails ? 'Hide' : 'Show'}} Calculation Details
+      </button>
+
+      <div class="calculation-details" *ngIf="showCalculationDetails">
+        <h3>Calculation Breakdown</h3>
+        <div class="formula">
+          <p><strong>Formula:</strong> (Death Cover × Rating Factor × Age) ÷ 1000 × 12</p>
+          <p><strong>Details:</strong> {{calculationResult.calculationDetails.formula}}</p>
+        </div>
+        <div class="breakdown">
+          <ul>
+            <li><strong>Death Cover Amount:</strong> {{formatCurrency(calculationResult.calculationDetails.deathCoverAmount)}}</li>
+            <li><strong>Age Next Birthday:</strong> {{calculationResult.calculationDetails.age}} years</li>
+            <li><strong>Occupation Factor:</strong> {{calculationResult.calculationDetails.factor}}</li>
+            <li><strong>Monthly Premium:</strong> {{formatCurrency(calculationResult.annualPremium)}} ÷ 12 = {{formatCurrency(monthlyPremium)}}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </form>
 </div>
